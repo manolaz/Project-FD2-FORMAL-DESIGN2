@@ -1,7 +1,26 @@
-# Project-FD2-FORMAL-DESIGN2
+# Project FORMAL DESIGN 2 Prover ACSL Frama-C
 Formal Specification Languages
 
-Project to to:
+Master of Computer Science 
+
+University of Bordeaux 
+
+Instructor: Professor Gimbert
+
+## Team members:
+
++ Nguyen Vu Anh Trung
+
++ Nguyen Quoc Khanh
+
++ Mr Nguyen Chi Cong
+
+
+November 10, 2021 
+
+
+
+## Project programs:
 
 1/Computing the sum of values of an array of int.
 
