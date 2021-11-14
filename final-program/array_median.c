@@ -2,97 +2,90 @@
 #include <limits.h>
 
 typedef unsigned int size_t;
-typedef struct Average avg;
-struct Average
-{
-    bool success;
-    long long average;
-};
+typedef struct Median med;
+
 /*@
-axiomatic Sum{
-    logic integer sum(int * t , integer start, integer end);
+    requires \valid(a);
+    requires \valid(b);
+    ensures *a == \old(*b);
+    ensures *b == \old(*a);
+    assigns *a,*b;
+    */
+    int swap(int *a, int *b)
+    {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+        return a,b;
+    }
 
-    axiom sum_false :
-        \forall int *t, integer start , integer stop;
-        start >= stop ==> sum(t,start,stop) == 0;
+    /*@
+    requires \valid(t +(leftmost..rightmost));
+    requires 0 <= leftmost < INT_MAX;
+    requires 0 <= rightmost < INT_MAX;
+    decreases (rightmost - leftmost);
+    assigns *(t+(leftmost..rightmost));
+    */
+    int * quickSort(int * t, int leftmost, int rightmost)
+    {
+        // Base case: No need to sort arrays of length <= 1
+        if (leftmost >= rightmost)
+        {
+            return;
+        }  
+        // Index indicating the "split" between elements smaller than pivot and 
+        // elements greater than pivot
+        int pivot = t[rightmost];
+        int counter = leftmost;
+        /*@
+            loop assigns i, counter, *(t+(leftmost..rightmost));
+            loop invariant 0 <= leftmost <= i <= rightmost + 1;
+            loop invariant 0 <= leftmost <= counter <= i;
+            loop invariant \forall int i; leftmost <= i < counter ==> t[i] <= pivot;
+            loop variant rightmost - i;
+        */
+        for (int i = leftmost; i <= rightmost; i++)
+        {
+            if (t[i] <= pivot)
+            {
+                /*@assert \valid(&t[counter]);*/
+                /*@assert \valid(&t[i]);*/
+                swap(&t[counter], &t[i]);
+                counter++;
+            }
+        }
 
-    axiom sum_true_start :
-        \forall int *t, integer start , integer stop;
-        0 <= start < stop ==>
-        sum(t,start,stop) == sum(t,start,start+1) + sum(t,start+1,stop);
+        // NOTE: counter is currently at one plus the pivot's index 
+        // (Hence, the counter-2 when recursively sorting the left side of pivot)
+        if (counter >= 2)
+        return quickSort(t, leftmost, counter-2); // Recursively sort the left side of pivot
+        if (counter < INT_MAX)
+        return quickSort(t, counter, rightmost);   // Recursively sort the right side of pivot
+    }
 
-    axiom sum_true_end :
-        \forall int *t, integer start , integer stop;
-        0 <= start < stop ==>
-        sum(t,start,stop) == sum(t,start,stop-1) + sum(t,stop-1,stop);
+// struct Median
+// {
+//     int median;
+// };
 
-    axiom sum_split :
-        \forall int *t, integer start , integer stop, integer middle;
-        0 <= start<=  middle < stop ==>
-        sum(t,start,stop) == sum(t,start,middle) + sum(t,middle,stop);
-
-
-    axiom sum_alone :
-        \forall int *t, integer start;
-        (0<=start)
-        ==>
-        sum(t,start,start+1) == t[start] ;
-}
-
-*/
+// Function for calculating median
 /*@
 requires \valid(array + (0..size-1));
 ensures (!\result.success) ==> size == 0 ;
-ensures (\result.success) ==> (\result.average == sum(array,0,size)/size) ;
+ensures (\result.success) ==> (\result.median <= sum(array,0,size)) ;
 assigns \nothing;
 */
-avg average(int *array, size_t size)
+int median(int * array, size_t size)
 {
-    //we use a structure to be sure that the function finish without error
-    avg ret;
-    ret.success = true;
-    ret.average = 0;
-    if (size == 0)
-    {
-        //if the size == 0 the function will fail
-        ret.success = false;
-        return ret;
-    }
+    int median=0;
+    // First we sort the array
+    int * sorted_array = quickSort(array, array, array + size);
+ 
+    // check for even case
+    if (size % 2 != 0)
+        median = sorted_array[size/2];
     else
-    {
-        /*
-        the average is the sum of all the element of the array divided by the size
-        An int is between - 2^15-1 and 2^15-1 that imply that the sum of
-        all the element of an array is between
-        -2^15 * size and 2^15 * size as size is between 0 and 2^16
-        the sum is between -2^31 and 2^31
-        a long long is between -2^63 and 2^63
+        median = (sorted_array[(size - 1) / 2] + sorted_array[size / 2]) / 2.0;
 
-        the sum of all the element can be inside a long long.
-        */
-        long long sum = 0;
-
-        /*@
-        loop assigns i, sum ;
-        loop invariant 0 <= i <= size;
-        loop invariant sum == sum(array,0,i);
-        loop invariant INT_MIN * i <= sum <= INT_MAX * i;
-        */
-
-        for (size_t i = 0; i < size; i++)
-        {
-            //@assert INT_MIN * i <= sum <= INT_MAX * i;
-
-            sum += array[i];
-            //@assert  i+1 <= size;
-
-            //@assert INT_MIN * (i+1) <= sum <= INT_MAX * (i+1);
-            //@assert ((LLONG_MIN < INT_MIN * size ) && (LLONG_MAX > INT_MAX* size));
-            //@assert LLONG_MIN <= sum <= LLONG_MAX;
-
-            //@assert sum == sum(array,0,i) + array[i];
-        }
-        ret.average = sum / size;
-        return ret;
-    }
+    return median;
 }

@@ -22,3 +22,9 @@ Project to to:
 5/Counting the number of occurences of a word in a text
 
 
+
+## Command to execute the Frama C prover
+
+```bash
+ frama-c -wp -wp-rte  final-program/"program.c"
+```
