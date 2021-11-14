@@ -68,9 +68,9 @@ size_t stringLength(const char* str) {
 int main(void) {
 
    const char hello[] = { 'h', 'e', 'l', 'l', 'o', '\0'};
-   const char helli[] =  { 'h', 'e', 'l', 'l', 'i', '\0'};
+   const char bonjour[] =  { 'b', 'o', 'n', 'j', 'o', 'u', 'r', '\0'};
 
    /*@ assert \valid_read(&hello[0]) && \valid_read(&helli[0]) ; */
-   stringCompare(hello, helli, 5);
+   stringCompare(hello, bonjour, 5);
    return 0;
 } 

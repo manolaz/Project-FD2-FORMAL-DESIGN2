@@ -23,7 +23,7 @@ Project to to:
 
 ==>final-program/word_occurence_counter.c
 
-6/Compare 2 differents strings
+6/Compare 2 differents strings "hello" vs "bonjour"
 
 ==>final-program/strings_compare.c
 
