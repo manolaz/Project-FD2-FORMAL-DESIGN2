@@ -63,14 +63,16 @@ size_t stringLength(const char* str) {
 
 }
 
-/*@ assigns \nothing ;
-    ensures \result == 0 ;*/
+/*@
+assigns \nothing ;
+ensures \result >= 0 ;
+*/
 int main(void) {
 
-   const char hello[] = { 'h', 'e', 'l', 'l', 'o', '\0'};
+   const char hello[] = { 'h', 'e', 'l', 'l', 'o', '1', '\0'};
    const char bonjour[] =  { 'b', 'o', 'n', 'j', 'o', 'u', 'r', '\0'};
 
-   /*@ assert \valid_read(&hello[0]) && \valid_read(&helli[0]) ; */
-   stringCompare(hello, bonjour, 5);
+   /*@ assert \valid_read(&hello[0]) && \valid_read(&bonjour[0]) ; */
+   stringCompare(hello, bonjour, 7);
    return 0;
 } 
