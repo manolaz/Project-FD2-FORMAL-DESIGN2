@@ -5,7 +5,7 @@ Master of Computer Science
 
 University of Bordeaux 
 
-Instructor: Professor Gimbert
+Instructor: Professor Hugo GIMBERT
 
 ## Team members:
 
