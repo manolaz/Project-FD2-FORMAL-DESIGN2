@@ -51,3 +51,10 @@ November 10, 2021
 ```bash
  frama-c -wp -wp-rte  final-program/"program.c"
 ```
+
+
+## Bibliographies:
+
+1.Combined static and dynamic analyses in Frama-C: An Overview (Nikolai Kosmatov, CEA, France)
+
+https://www.youtube.com/watch?v=iC4i25jBaYg
